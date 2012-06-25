@@ -31,14 +31,14 @@ module Soulmate
       raise ArgumentError unless item["id"] && item["term"]
       
       # kill any old items with this id
-      remove("id" => item["id"]) unless opts[:skip_duplicate_check]
+#      remove("id" => item["id"]) unless opts[:skip_duplicate_check]
       
       Soulmate.redis.pipelined do
         # store the raw data in a separate key to reduce memory usage
-        Soulmate.redis.hset(database, item["id"], MultiJson.encode(item))
+#        Soulmate.redis.hset(database, item["id"], MultiJson.encode(item))
         phrase = ([item["term"]] + (item["aliases"] || [])).join(' ')
         prefixes_for_phrase(phrase).each do |p|
-          Soulmate.redis.sadd(base, p) # remember this prefix in a master set
+#          Soulmate.redis.sadd(base, p) # remember this prefix in a master set
           Soulmate.redis.zadd("#{base}:#{p}", item["score"], item["id"]) # store the id of this term in the index
         end
       end
@@ -54,7 +54,7 @@ module Soulmate
           Soulmate.redis.hdel(database, prev_item["id"])
           phrase = ([prev_item["term"]] + (prev_item["aliases"] || [])).join(' ')
           prefixes_for_phrase(phrase).each do |p|
-            Soulmate.redis.srem(base, p)
+#            Soulmate.redis.srem(base, p)
             Soulmate.redis.zrem("#{base}:#{p}", prev_item["id"])
           end
         end

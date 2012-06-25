@@ -20,13 +20,16 @@ module Soulmate
       end
 
       ids = Soulmate.redis.zrevrange(cachekey, 0, options[:limit] - 1)
-      if ids.size > 0
-        results = Soulmate.redis.hmget(database, *ids)
-        results = results.reject{ |r| r.nil? } # handle cached results for ids which have since been deleted
-        results.map { |r| MultiJson.decode(r) }
-      else
-        []
-      end
+      results = ids;
+      
+#      if ids.size > 0
+#        results = 
+#        results = Soulmate.redis.hmget(database, *ids)
+#        results = results.reject{ |r| r.nil? } # handle cached results for ids which have since been deleted
+#        results.map { |r| MultiJson.decode(r) }
+#      else
+#        []
+#      end
     end
   end
 end
